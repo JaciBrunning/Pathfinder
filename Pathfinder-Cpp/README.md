@@ -1,5 +1,6 @@
 # Pathfinder C++ Port
-This is a port of the C core libraries and uses the same API. The purpose
+This is a port of the C core libraries and uses the same API, except for imports. There is no
+ equivalent pathfinder.h, each header file must be imported as needed. of The purpose
 of this port is for C++ projects that will be run across multiple architectures
 or where you want to compile it yourself for some reason. Note that this is NOT
 for use in C++ robot applications, for that you always have the same target architecture
