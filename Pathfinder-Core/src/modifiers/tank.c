@@ -14,34 +14,42 @@ void pathfinder_modify_tank(Segment *original, int length, Segment *left_traj, S
         
         left.x = seg.x - (w * sin_angle);
         left.y = seg.y + (w * cos_angle);
-        
-        if (i > 0) {
-            Segment last = left_traj[i - 1];
-            double distance = sqrt(
-                (left.x - last.x) * (left.x - last.x)
-                + (left.y - last.y) * (left.y - last.y)
-            );
-            
-            left.position = last.position + distance;
-            left.velocity = distance / seg.dt;
-            left.acceleration = (left.velocity - last.velocity) / seg.dt;
-            left.jerk = (left.acceleration - last.acceleration) / seg.dt;
-        }
-        
+
         right.x = seg.x + (w * sin_angle);
         right.y = seg.y - (w * cos_angle);
-        
+
         if (i > 0) {
-            Segment last = right_traj[i - 1];
-            double distance = sqrt(
-                (right.x - last.x) * (right.x - last.x)
-                + (right.y - last.y) * (right.y - last.y)
+            Segment last_seg = original[i - 1];
+            Segment last_left = left_traj[i - 1];
+            Segment last_right = right_traj[i - 1];
+
+            double left_distance = sqrt(
+                (left.x - last_left.x) * (left.x - last_left.x)
+                + (left.y - last_left.y) * (left.y - last_left.y)
             );
-            
-            right.position = last.position + distance;
-            right.velocity = distance / seg.dt;
-            right.acceleration = (right.velocity - last.velocity) / seg.dt;
-            right.jerk = (right.acceleration - last.acceleration) / seg.dt;
+            if ((last_seg.x > seg.x && last_left.x < left.x) || (last_seg.y > seg.y && last_left.y < left.y) ||
+                (last_seg.x < seg.x && last_left.x > left.x) || (last_seg.y < seg.y && last_left.y > left.y)) {
+                    left_distance = -left_distance;
+            }
+
+            double right_distance = sqrt(
+                (right.x - last_right.x) * (right.x - last_right.x)
+                + (right.y - last_right.y) * (right.y - last_right.y)
+            );
+            if ((last_seg.x > seg.x && last_right.x < right.x) || (last_seg.y > seg.y && last_right.y < right.y) ||
+                (last_seg.x < seg.x && last_right.x > right.x) || (last_seg.y < seg.y && last_right.y > right.y)) {
+                     right_distance = -right_distance;
+             }
+
+            left.position = last_left.position + left_distance;
+            left.velocity = left_distance / seg.dt;
+            left.acceleration = (left.velocity - last_left.velocity) / seg.dt;
+            left.jerk = (left.acceleration - last_left.acceleration) / seg.dt;
+
+            right.position = last_right.position + right_distance;
+            right.velocity = right_distance / seg.dt;
+            right.acceleration = (right.velocity - last_right.velocity) / seg.dt;
+            right.jerk = (right.acceleration - last_right.acceleration) / seg.dt;
         }
         
         left_traj[i] = left;

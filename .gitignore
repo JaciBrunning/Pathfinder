@@ -26,6 +26,7 @@ Pathfinder-Java/.gradle/
 Pathfinder-Core/build/
 test/build
 .gradle/
+**/gradle.properties
 out/
 .idea
 
