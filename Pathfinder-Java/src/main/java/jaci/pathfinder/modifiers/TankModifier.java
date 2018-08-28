@@ -1,7 +1,5 @@
 package jaci.pathfinder.modifiers;
 
-import java.util.Objects;
-
 import jaci.pathfinder.PathfinderJNI;
 import jaci.pathfinder.Trajectory;
 
@@ -17,8 +15,8 @@ import jaci.pathfinder.Trajectory;
  * @author Jaci
  */
 public class TankModifier {
-    private final Trajectory source;
-    private Trajectory left, right;
+
+    Trajectory source, left, right;
 
     /**
      * Create an instance of the modifier
@@ -32,11 +30,11 @@ public class TankModifier {
     /**
      * Generate the Trajectory Modification
      *
-     * @param wheelbaseWidth The width (in meters) between the individual sides of the drivebase
+     * @param wheelbase_width The width (in meters) between the individual sides of the drivebase
      * @return self
      */
-    public TankModifier modify(double wheelbaseWidth) {
-        Trajectory[] trajs = PathfinderJNI.modifyTrajectoryTank(source, wheelbaseWidth);
+    public TankModifier modify(double wheelbase_width) {
+        Trajectory[] trajs = PathfinderJNI.modifyTrajectoryTank(source, wheelbase_width);
         left = trajs[0];
         right = trajs[1];
         return this;
@@ -69,29 +67,4 @@ public class TankModifier {
         return right;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TankModifier modifier = (TankModifier) o;
-
-        return Objects.equals(source, modifier.source) &&
-                Objects.equals(left, modifier.left) &&
-                Objects.equals(right, modifier.right);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(source, left, right);
-    }
-
-    @Override
-    public String toString() {
-        return "TankModifier{" +
-                "source=" + source +
-                ", left=" + left +
-                ", right=" + right +
-                '}';
-    }
 }

@@ -10,12 +10,12 @@ import jaci.pathfinder.Trajectory;
  */
 public class DistanceFollower {
 
-    private double kp, kd, kv, ka;
+    double kp, ki, kd, kv, ka;
 
-    private double lastError, heading;
+    double last_error, heading;
 
-    private int segment;
-    private Trajectory trajectory;
+    int segment;
+    Trajectory trajectory;
 
     public DistanceFollower(Trajectory traj) {
         this.trajectory = traj;
@@ -47,18 +47,15 @@ public class DistanceFollower {
      *           faster. 0.0 is the default
      */
     public void configurePIDVA(double kp, double ki, double kd, double kv, double ka) {
-        this.kp = kp;
-        this.kd = kd;
-        this.kv = kv;
-        this.ka = ka;
+        this.kp = kp; this.ki = ki; this.kd = kd;
+        this.kv = kv; this.ka = ka;
     }
 
     /**
      * Reset the follower to start again. Encoders must be reconfigured.
      */
     public void reset() {
-        lastError = 0;
-        segment = 0;
+        last_error = 0; segment = 0;
     }
 
     /**
@@ -76,9 +73,9 @@ public class DistanceFollower {
             double error = seg.position - distance_covered;
             double calculated_value =
                     kp * error +                                    // Proportional
-                            kd * ((error - lastError) / seg.dt) +          // Derivative
-                            (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
-            lastError = error;
+                    kd * ((error - last_error) / seg.dt) +          // Derivative
+                    (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
+            last_error = error;
             heading = seg.heading;
             segment++;
 

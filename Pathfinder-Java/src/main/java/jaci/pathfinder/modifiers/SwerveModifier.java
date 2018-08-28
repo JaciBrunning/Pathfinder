@@ -28,8 +28,7 @@ public class SwerveModifier {
         SWERVE_DEFAULT
     }
 
-    private final Trajectory source;
-    private Trajectory fl, fr, bl, br;
+    Trajectory source, fl, fr, bl, br;
 
     /**
      * Create an instance of the modifier
@@ -51,10 +50,7 @@ public class SwerveModifier {
      * @return self
      */
     public SwerveModifier modify(double wheelbase_width, double wheelbase_depth, Mode mode) {
-        Trajectory[] trajs = PathfinderJNI.modifyTrajectorySwerve(source,
-                wheelbase_width,
-                wheelbase_depth,
-                mode);
+        Trajectory[] trajs = PathfinderJNI.modifyTrajectorySwerve(source, wheelbase_width, wheelbase_depth, mode);
         fl = trajs[0];
         fr = trajs[1];
         bl = trajs[2];

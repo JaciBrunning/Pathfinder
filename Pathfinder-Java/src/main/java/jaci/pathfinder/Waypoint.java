@@ -1,7 +1,5 @@
 package jaci.pathfinder;
 
-import java.util.Objects;
-
 /**
  * A single waypoint used for Trajectory Generation.
  * <p>
@@ -27,29 +25,4 @@ public class Waypoint {
         this.angle = angle;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Waypoint waypoint = (Waypoint) o;
-
-        return Double.compare(waypoint.x, x) == 0 &&
-                Double.compare(waypoint.y, y) == 0 &&
-                Double.compare(waypoint.angle, angle) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, angle);
-    }
-
-    @Override
-    public String toString() {
-        return "Waypoint{" +
-                "x=" + x +
-                ", y=" + y +
-                ", angle=" + angle +
-                '}';
-    }
 }

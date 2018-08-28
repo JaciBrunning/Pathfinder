@@ -1,7 +1,5 @@
 package jaci.pathfinder.followers;
 
-import java.util.Objects;
-
 import jaci.pathfinder.Trajectory;
 
 /**
@@ -11,18 +9,19 @@ import jaci.pathfinder.Trajectory;
  * @author Jaci
  */
 public class EncoderFollower {
-    private int encoderOffset, encoderTickCount;
-    private double wheelCircumference;
 
-    private double kp, ki, kd, kv, ka;
+    int encoder_offset, encoder_tick_count;
+    double wheel_circumference;
 
-    private double lastError, heading;
+    double kp, ki, kd, kv, ka;
 
-    private int segment;
-    private Trajectory trajectory;
+    double last_error, heading;
 
-    public EncoderFollower(Trajectory trajectory) {
-        this.trajectory = trajectory;
+    int segment;
+    Trajectory trajectory;
+
+    public EncoderFollower(Trajectory traj) {
+        this.trajectory = traj;
     }
 
     public EncoderFollower() { }
@@ -51,36 +50,29 @@ public class EncoderFollower {
      *           faster. 0.0 is the default
      */
     public void configurePIDVA(double kp, double ki, double kd, double kv, double ka) {
-        this.kp = kp;
-        this.ki = ki;
-        this.kd = kd;
-        this.kv = kv;
-        this.ka = ka;
+        this.kp = kp; this.ki = ki; this.kd = kd;
+        this.kv = kv; this.ka = ka;
     }
 
     /**
      * Configure the Encoders being used in the follower.
      *
-     * @param initialPosition    The initial 'offset' of your encoder. This should be set to the
-     *                           encoder value just before you start to track
-     * @param ticksPerRevolution How many ticks per revolution the encoder has
-     * @param wheelDiameter      The diameter of your wheels (or pulleys for track systems) in
-     *                           meters
+     * @param initial_position      The initial 'offset' of your encoder. This should be set to the encoder value just
+     *                              before you start to track
+     * @param ticks_per_revolution  How many ticks per revolution the encoder has
+     * @param wheel_diameter        The diameter of your wheels (or pulleys for track systems) in meters
      */
-    public void configureEncoder(int initialPosition,
-                                 int ticksPerRevolution,
-                                 double wheelDiameter) {
-        encoderOffset = initialPosition;
-        encoderTickCount = ticksPerRevolution;
-        wheelCircumference = Math.PI * wheelDiameter;
+    public void configureEncoder(int initial_position, int ticks_per_revolution, double wheel_diameter) {
+        encoder_offset = initial_position;
+        encoder_tick_count = ticks_per_revolution;
+        wheel_circumference = Math.PI * wheel_diameter;
     }
 
     /**
      * Reset the follower to start again. Encoders must be reconfigured.
      */
     public void reset() {
-        lastError = 0;
-        segment = 0;
+        last_error = 0; segment = 0;
     }
 
     /**
@@ -89,28 +81,26 @@ public class EncoderFollower {
      * some extra terms in your control loop for realignment based on gyroscope input and the
      * desired heading given by this object.
      *
-     * @param encoderTick The amount of ticks the encoder has currently measured.
+     * @param encoder_tick The amount of ticks the encoder has currently measured.
      * @return The desired output for your motor controller
      */
-    public double calculate(int encoderTick) {
+    public double calculate(int encoder_tick) {
         // Number of Revolutions * Wheel Circumference
-        double distance_covered = ((double) (encoderTick - encoderOffset) / encoderTickCount)
-                * wheelCircumference;
+        double distance_covered = ((double)(encoder_tick - encoder_offset) / encoder_tick_count)
+                * wheel_circumference;
         if (segment < trajectory.length()) {
             Trajectory.Segment seg = trajectory.get(segment);
             double error = seg.position - distance_covered;
             double calculated_value =
                     kp * error +                                    // Proportional
-                            kd * ((error - lastError) / seg.dt) +          // Derivative
-                            (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
-            lastError = error;
+                    kd * ((error - last_error) / seg.dt) +          // Derivative
+                    (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
+            last_error = error;
             heading = seg.heading;
             segment++;
 
             return calculated_value;
-        } else {
-            return 0;
-        }
+        } else return 0;
     }
 
     /**
@@ -134,58 +124,4 @@ public class EncoderFollower {
         return segment >= trajectory.length();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EncoderFollower follower = (EncoderFollower) o;
-
-        return encoderOffset == follower.encoderOffset &&
-                encoderTickCount == follower.encoderTickCount &&
-                Double.compare(follower.wheelCircumference, wheelCircumference) == 0 &&
-                Double.compare(follower.kp, kp) == 0 &&
-                Double.compare(follower.ki, ki) == 0 &&
-                Double.compare(follower.kd, kd) == 0 &&
-                Double.compare(follower.kv, kv) == 0 &&
-                Double.compare(follower.ka, ka) == 0 &&
-                Double.compare(follower.lastError, lastError) == 0 &&
-                Double.compare(follower.heading, heading) == 0 &&
-                segment == follower.segment &&
-                Objects.equals(trajectory, follower.trajectory);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(encoderOffset,
-                encoderTickCount,
-                wheelCircumference,
-                kp,
-                ki,
-                kd,
-                kv,
-                ka,
-                lastError,
-                heading,
-                segment,
-                trajectory);
-    }
-
-    @Override
-    public String toString() {
-        return "EncoderFollower{" +
-                "encoderOffset=" + encoderOffset +
-                ", encoderTickCount=" + encoderTickCount +
-                ", wheelCircumference=" + wheelCircumference +
-                ", kp=" + kp +
-                ", ki=" + ki +
-                ", kd=" + kd +
-                ", kv=" + kv +
-                ", ka=" + ka +
-                ", lastError=" + lastError +
-                ", heading=" + heading +
-                ", segment=" + segment +
-                ", trajectory=" + trajectory +
-                '}';
-    }
 }
