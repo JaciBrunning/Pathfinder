@@ -17,7 +17,8 @@ import jaci.pathfinder.Trajectory;
  * @author Jaci
  */
 public class TankModifier {
-    Trajectory source, left, right;
+    private final Trajectory source;
+    private Trajectory left, right;
 
     /**
      * Create an instance of the modifier
@@ -43,6 +44,7 @@ public class TankModifier {
 
     /**
      * Get the initial source trajectory
+     *
      * @return the source trajectory
      */
     public Trajectory getSourceTrajectory() {
@@ -51,6 +53,7 @@ public class TankModifier {
 
     /**
      * Get the trajectory for the left side of the drive base
+     *
      * @return a trajectory for the left side
      */
     public Trajectory getLeftTrajectory() {
@@ -59,6 +62,7 @@ public class TankModifier {
 
     /**
      * Get the trajectory for the right side of the drive base
+     *
      * @return a trajectory for the right side
      */
     public Trajectory getRightTrajectory() {

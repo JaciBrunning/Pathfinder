@@ -25,10 +25,10 @@ public class Trajectory {
         }
     }
 
-    /** @deprecated use {@link #Trajectory(Trajectory)} instead */
+    /** @deprecated use {@link #Trajectory(Segment[])} instead */
     @Deprecated
     public Trajectory(int length) {
-        segments = new Segment[length];
+        this(new Segment[length]);
     }
 
     public Segment get(int index) {
@@ -125,11 +125,11 @@ public class Trajectory {
         public String toString() {
             return "Config{" +
                     "fit=" + fit +
-                    ", sample_count=" + sample_count +
-                    ", dt=" + dt +
-                    ", max_velocity=" + max_velocity +
-                    ", max_acceleration=" + max_acceleration +
-                    ", max_jerk=" + max_jerk +
+                    ", sampleCount=" + sample_count +
+                    ", deltaTime=" + dt +
+                    ", maxVelocity=" + max_velocity +
+                    ", maxAcceleration=" + max_acceleration +
+                    ", maxJerk=" + max_jerk +
                     '}';
         }
     }

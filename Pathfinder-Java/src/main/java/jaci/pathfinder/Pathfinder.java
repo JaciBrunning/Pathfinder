@@ -34,9 +34,9 @@ public class Pathfinder {
 
     /**
      * Bound an angle (in degrees) to -180 to 180 degrees.
-	 *
+     *
      * @param angle_degrees an input angle in degrees
-	 * @return the bounded angle
+     * @return the bounded angle
      */
     public static double boundHalfDegrees(double angle_degrees) {
         while (angle_degrees >= 180.0) angle_degrees -= 360.0;
@@ -94,5 +94,15 @@ public class Pathfinder {
      */
     public static Trajectory readFromCSV(File file) {
         return new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(file.getAbsolutePath()));
+    }
+
+    /**
+     * Thrown when a Trajectory could not be generated for an unknown reason.
+     */
+    @SuppressWarnings("unused") // Used in native code
+    public static class GenerationException extends Exception {
+        public GenerationException(String message) {
+            super(message);
+        }
     }
 }

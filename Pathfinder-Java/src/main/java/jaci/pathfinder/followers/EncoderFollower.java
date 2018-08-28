@@ -11,15 +11,15 @@ import jaci.pathfinder.Trajectory;
  * @author Jaci
  */
 public class EncoderFollower {
-    int encoder_offset, encoder_tick_count;
-    double wheel_circumference;
+    private int encoderOffset, encoderTickCount;
+    private double wheelCircumference;
 
-    double kp, ki, kd, kv, ka;
+    private double kp, ki, kd, kv, ka;
 
-    double last_error, heading;
+    private double lastError, heading;
 
-    int segment;
-    Trajectory trajectory;
+    private int segment;
+    private Trajectory trajectory;
 
     public EncoderFollower(Trajectory trajectory) {
         this.trajectory = trajectory;
@@ -29,7 +29,8 @@ public class EncoderFollower {
 
     /**
      * Set a new trajectory to follow, and reset the cumulative errors and segment counts
-     * @param traj a previously generated trajectory
+     *
+     * @param trajectory a previously generated trajectory
      */
     public void setTrajectory(Trajectory trajectory) {
         this.trajectory = trajectory;
@@ -69,16 +70,16 @@ public class EncoderFollower {
     public void configureEncoder(int initialPosition,
                                  int ticksPerRevolution,
                                  double wheelDiameter) {
-        encoder_offset = initialPosition;
-        encoder_tick_count = ticksPerRevolution;
-        wheel_circumference = Math.PI * wheelDiameter;
+        encoderOffset = initialPosition;
+        encoderTickCount = ticksPerRevolution;
+        wheelCircumference = Math.PI * wheelDiameter;
     }
 
     /**
      * Reset the follower to start again. Encoders must be reconfigured.
      */
     public void reset() {
-        last_error = 0;
+        lastError = 0;
         segment = 0;
     }
 
@@ -93,16 +94,16 @@ public class EncoderFollower {
      */
     public double calculate(int encoderTick) {
         // Number of Revolutions * Wheel Circumference
-        double distance_covered = ((double) (encoderTick - encoder_offset) / encoder_tick_count)
-                * wheel_circumference;
+        double distance_covered = ((double) (encoderTick - encoderOffset) / encoderTickCount)
+                * wheelCircumference;
         if (segment < trajectory.length()) {
             Trajectory.Segment seg = trajectory.get(segment);
             double error = seg.position - distance_covered;
             double calculated_value =
                     kp * error +                                    // Proportional
-                            kd * ((error - last_error) / seg.dt) +          // Derivative
+                            kd * ((error - lastError) / seg.dt) +          // Derivative
                             (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
-            last_error = error;
+            lastError = error;
             heading = seg.heading;
             segment++;
 
@@ -140,15 +141,15 @@ public class EncoderFollower {
 
         EncoderFollower follower = (EncoderFollower) o;
 
-        return encoder_offset == follower.encoder_offset &&
-                encoder_tick_count == follower.encoder_tick_count &&
-                Double.compare(follower.wheel_circumference, wheel_circumference) == 0 &&
+        return encoderOffset == follower.encoderOffset &&
+                encoderTickCount == follower.encoderTickCount &&
+                Double.compare(follower.wheelCircumference, wheelCircumference) == 0 &&
                 Double.compare(follower.kp, kp) == 0 &&
                 Double.compare(follower.ki, ki) == 0 &&
                 Double.compare(follower.kd, kd) == 0 &&
                 Double.compare(follower.kv, kv) == 0 &&
                 Double.compare(follower.ka, ka) == 0 &&
-                Double.compare(follower.last_error, last_error) == 0 &&
+                Double.compare(follower.lastError, lastError) == 0 &&
                 Double.compare(follower.heading, heading) == 0 &&
                 segment == follower.segment &&
                 Objects.equals(trajectory, follower.trajectory);
@@ -156,32 +157,32 @@ public class EncoderFollower {
 
     @Override
     public int hashCode() {
-        return Objects.hash(encoder_offset,
-                            encoder_tick_count,
-                            wheel_circumference,
-                            kp,
-                            ki,
-                            kd,
-                            kv,
-                            ka,
-                            last_error,
-                            heading,
-                            segment,
-                            trajectory);
+        return Objects.hash(encoderOffset,
+                encoderTickCount,
+                wheelCircumference,
+                kp,
+                ki,
+                kd,
+                kv,
+                ka,
+                lastError,
+                heading,
+                segment,
+                trajectory);
     }
 
     @Override
     public String toString() {
         return "EncoderFollower{" +
-                "encoder_offset=" + encoder_offset +
-                ", encoder_tick_count=" + encoder_tick_count +
-                ", wheel_circumference=" + wheel_circumference +
+                "encoderOffset=" + encoderOffset +
+                ", encoderTickCount=" + encoderTickCount +
+                ", wheelCircumference=" + wheelCircumference +
                 ", kp=" + kp +
                 ", ki=" + ki +
                 ", kd=" + kd +
                 ", kv=" + kv +
                 ", ka=" + ka +
-                ", last_error=" + last_error +
+                ", lastError=" + lastError +
                 ", heading=" + heading +
                 ", segment=" + segment +
                 ", trajectory=" + trajectory +
