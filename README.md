@@ -68,6 +68,12 @@ To see the usage for each language variation of the API, see the README in their
 | Java     | [Pathfinder-Java](Pathfinder-Java/) |
 | LabVIEW  | [Pathfinder-LabVIEW](Pathfinder-LabVIEW/) |
 
-## Other languages
+### Other languages
 
 The RobotPy project has created python bindings around the Pathfinder libraries, and can be found at https://github.com/robotpy/robotpy-pathfinder
+
+## A word on releases
+The releases on Maven (mentioned above) are built for the NI RoboRIO (v16/7 2018 image). If you go to the github releases, you can download the 1.5 version for Windows/Linux/Mac releases.
+
+## Further reading
+If you want to know more about how Pathfinder works, I highly suggest watching the seminar on [Motion Profiling by FRC Team 254](https://www.youtube.com/watch?v=8319J1BEHwM), which inspired and provided a lot of guidance for this project. Both use the same generation procedure, with some logistical differences.

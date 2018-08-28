@@ -29,6 +29,7 @@ public class EncoderFollower {
 
     /**
      * Set a new trajectory to follow, and reset the cumulative errors and segment counts
+     * @param traj a previously generated trajectory
      */
     public void setTrajectory(Trajectory trajectory) {
         this.trajectory = trajectory;

@@ -13,7 +13,10 @@ import java.io.File;
 public class Pathfinder {
     /**
      * Convert degrees to radians. This is included here for static imports. In this library, all
-     * angle values are given in radians
+     * angle values are given in radians.
+     *
+     * @param degrees the degrees input
+     * @return the input in radians
      */
     public static double d2r(double degrees) {
         return Math.toRadians(degrees);
@@ -21,6 +24,9 @@ public class Pathfinder {
 
     /**
      * Convert radians to degrees. This is included here for static imports.
+     *
+     * @param radians the radians input
+     * @return the input in degrees
      */
     public static double r2d(double radians) {
         return Math.toDegrees(radians);
@@ -28,6 +34,9 @@ public class Pathfinder {
 
     /**
      * Bound an angle (in degrees) to -180 to 180 degrees.
+	 *
+     * @param angle_degrees an input angle in degrees
+	 * @return the bounded angle
      */
     public static double boundHalfDegrees(double angle_degrees) {
         while (angle_degrees >= 180.0) angle_degrees -= 360.0;
