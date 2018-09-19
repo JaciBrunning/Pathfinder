@@ -62,7 +62,6 @@ int pathfinder_generate_LabVIEW(Segment *segments)
 int pathfinder_generate(TrajectoryCandidate *c, Segment *segments) {
     int trajectory_length = c->length;
     int path_length = c->path_length;
-    double totalLength = c->totalLength;
     
     Spline *splines = (c->saptr);
     double *splineLengths = (c->laptr);
