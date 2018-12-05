@@ -24,6 +24,18 @@ Swerve Drive:
 ![](img/swerve.png)
 
 ## Part of the FIRST Robotics Competition?
+
+### For 2019:
+This (old) version of Pathfinder has been published for the 2019 FRC Season, if you would like to use the legacy version
+over the new and shiny [Pathfinder v2](https://github.com/GrappleRobotics/Pathfinder).
+
+The Vendor JSON File is published here: [https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json](https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json)
+
+Refer to the 2019 Vendor Library instructions for how to use this file, but the short and sweet of it is:
+- VSCode: Command Palette (CTRL + SHIFT + P) -> WPILib: Manage Vendor Libraries -> Install new library (online) -> Paste the above URL.
+- GradleRIO Standalone: Download the file and place it in `vendordeps/PathfinderOLD.json` relative to your project's root directory.
+
+### For 2018:
 Add the following lines to your build.gradle if you're using GradleRIO (2018.01.11 or higher):
 
 ### Java:
@@ -51,14 +63,14 @@ You also have to download this, extract it, and place `libpathfinder.so` into `~
 Download this and put `libpathfinder.a` in `~/wpilib/user/cpp/lib`: http://dev.imjac.in/maven/jaci/pathfinder/Pathfinder-Core/1.8/Pathfinder-Core-1.8-athena.zip   
 Download this and extract all of its contents to `~/wpilib/user/cpp/include`: http://dev.imjac.in/maven/jaci/pathfinder/Pathfinder-Core/1.8/Pathfinder-Core-1.8-headers.zip   
 
-## Building / Installing on your Architecture
-If you want to use Pathfinder on your system, you will have to build the library for your platform. You can do this with the following:
+## Using Pathfinder on your Architecture.
+1. Download the prebuilt Pathfinder files: [https://dev.imjac.in/maven/jaci/pathfinder/](https://dev.imjac.in/maven/jaci/pathfinder/)
+    - C/C++: Use Pathfinder-Core. You will need both the `headers` file and the file for your platform (e.g. 64-bit linux is `linuxx86-64`)
+    - Java: Use Pathfinder-Java and Pathfinder-JNI. For Pathfinder-JNI, you will need the jar for your platform (e.g. 64-bit linux is `linuxx86-64`)
 
-```java
-./gradlew build
-```
-
-The native libraries will be located under `./Pathfinder-Core/build/libs/pathfinder/` (shared and static libs, platform=any64) and `./Pathfinder-Java/build/libs/pathfinderjava/shared/any64`. If you're using native shared (or java), you must put these somewhere on your system load path (e.g. Mac/Linux = `/usr/local`, Windows = Somwhere on PATH)
+2. Add Pathfinder to your project.
+    - For C/C++: Unzip the headers zip and add it to your include path. Also unzip your platform zip and link with `-lpathfinder`
+    - For Java: Add both the Pathfinder-Java and Pathfinder-JNI jars to your classpath.
 
 ## Usage
 To see the usage for each language variation of the API, see the README in their folder.
