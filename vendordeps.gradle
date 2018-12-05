@@ -34,6 +34,11 @@ Map<String, Object> vendorJson() {
         groupId: project.group,
         artifactId: "Pathfinder-Java",
         version: project.version
+      ],
+      [
+        groupId: "jaci.jniloader",
+        artifactId: "JNILoader",
+        version: "1.0.0"
       ]
     ],
     jniDependencies: [

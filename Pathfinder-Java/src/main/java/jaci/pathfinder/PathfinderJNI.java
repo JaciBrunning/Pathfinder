@@ -3,6 +3,8 @@ package jaci.pathfinder;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.SwerveModifier;
 
+import jaci.jniloader.JNILoader;
+
 public class PathfinderJNI {
 
     static boolean libLoaded = false;
@@ -10,7 +12,8 @@ public class PathfinderJNI {
     static {
         if (!libLoaded) {
             try {
-                System.loadLibrary("pathfinderjni");
+                new JNILoader("pathfinderjni").load();
+                // System.loadLibrary("pathfinderjni");
             } catch (Exception e) {
                 e.printStackTrace();
             }

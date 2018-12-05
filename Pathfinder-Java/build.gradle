@@ -4,7 +4,15 @@ plugins {
     id 'c'
 }
 
-dependencies {}
+repositories {
+    maven {
+        url 'https://dev.imjac.in/maven'
+    }
+}
+
+dependencies {
+    compile 'jaci.jniloader:JNILoader:1.0.0'
+}
 
 model {
     components {
