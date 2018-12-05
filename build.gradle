@@ -1,39 +1,101 @@
 plugins {
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06" apply false
-    id "jaci.gradle.EmbeddedTools" version "2018.02.04" apply false
+    id 'edu.wpi.first.Toolchain' version '2019.1.1-beta-3-pre4' apply false
 }
+
+import edu.wpi.first.toolchain.NativePlatforms
 
 allprojects {
-    repositories {
-        jcenter()
-    }
-
     apply plugin: 'idea'
-
-    version = '1.8'
-}
-
-subprojects {
-    apply plugin: 'jaci.openrio.gradle.GradleRIO'
     apply plugin: 'maven-publish'
-    plugins.withType(CPlugin).whenPluginAdded {
-        project.apply plugin: "visual-studio"
-    }
+
+    group = 'jaci.pathfinder'
+    version = '2019.1.9'
 
     publishing {
         repositories {
             maven {
-                def pwdfile = file(java.nio.file.Paths.get(System.getProperty('user.home')).resolve('imjacinta.maven.cred'))
-                if (pwdfile.exists() && !project.hasProperty('mavenlocal')) {
-                    url("sftp://imjac.in:22/home/maven/public")
-                    credentials {
-                        username 'maven'
-                        password pwdfile.text
-                    }
-                } else {
-                    url("${project.buildDir}/repo")
+                name = "distLocal"
+                url = "${rootProject.buildDir}/mvnDistRepo"
+            }
+            publications.all {
+                groupId project.group
+            }
+        }
+    }
+}
+
+subprojects {
+    plugins.withType(CPlugin).whenPluginAdded {
+        project.apply plugin: 'visual-studio'
+        project.apply plugin: 'edu.wpi.first.Toolchain'
+
+        toolchainsPlugin.withRaspbian()
+        toolchainsPlugin.withRoboRIO()
+
+        toolchainsPlugin.getByName('roboRio').optional = true
+
+        project.model {
+            components {
+                withType(TargetedNativeComponent) {
+                    targetPlatform NativePlatforms.desktop
+                    targetPlatform NativePlatforms.raspbian
+                    targetPlatform NativePlatforms.roborio
                 }
             }
         }
     }
+
+    ext.binaryPublishers = [:]
+    ext.binaryArtifacts = { scope, name, jar ->
+        binaryPublishers[name] = [scope: scope, jar: jar]
+    }
+
+    project.model {
+        binaries {
+            withType(NativeBinarySpec) {
+                def bin = it
+                if (it.buildable && !(it instanceof StaticLibraryBinary)) {
+                    def taskSuffix = "${component.name}${targetPlatform.name}"
+                    def source = (bin instanceof SharedLibraryBinary ? bin.sharedLibraryFile : bin.executable.file)
+
+                    def ziptask = task "zip${taskSuffix}"(type: Zip) {
+                        from(source)
+                        into(targetPlatform.name)
+
+                        baseName = component.name
+                        classifier = targetPlatform.name
+
+                        dependsOn bin.tasks.withType(AbstractLinkTask)
+                    }
+
+                    def jartask = task "jar${taskSuffix}"(type: Jar) {
+                        from(source)
+                        into(targetPlatform.name)
+
+                        baseName = component.name
+                        classifier = targetPlatform.name
+
+                        dependsOn bin.tasks.withType(AbstractLinkTask)
+                    }
+
+                    if (binaryPublishers[bin.component.name] != null) {
+                        def entry = binaryPublishers[bin.component.name]
+                        entry.scope.artifact(entry.jar ? jartask : ziptask) {
+                            classifier targetPlatform.name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+apply from: 'vendordeps.gradle'
+
+task cleanMaven(type: Delete) {
+    delete "$buildDir/mvnDistRepo"
+}
+
+wrapper {
+    gradleVersion = '5.0'
 }

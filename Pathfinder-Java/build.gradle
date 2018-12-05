@@ -1,6 +1,29 @@
-apply plugin: 'java'
+plugins {
+    id 'edu.wpi.first.GradleJni' version '0.3.0'
+    id 'java'
+    id 'c'
+}
 
 dependencies {}
+
+model {
+    components {
+        pathfinderjni(JniNativeLibrarySpec) {
+            enableCheckTask true
+            javaCompileTasks << compileJava
+
+            sources {
+                c {
+                    source {
+                        srcDir 'src/native/c'
+                        include '**/*.c'
+                    }
+                    lib project: ':Pathfinder-Core', library: 'pathfinder', linkage: 'static'
+                }
+            }
+        }
+    }
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
@@ -12,28 +35,22 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
 publishing {
     publications {
-        pathfinder_java(MavenPublication) {
-            groupId 'jaci.pathfinder'
+        pathfinderJava(MavenPublication) {
             artifactId 'Pathfinder-Java'
 
             artifact jar
-
             artifact sourcesJar {
-                classifier "sources"
+                classifier 'sources'
             }
-
             artifact javadocJar {
-                classifier "javadoc"
+                classifier 'javadoc'
             }
+        }
+        pathfinderJni(MavenPublication) {
+            artifactId 'Pathfinder-JNI'
+            binaryArtifacts(it, 'pathfinderjni', true)
         }
     }
 }
-
-apply from: 'jni.gradle'

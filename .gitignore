@@ -1,14 +1,11 @@
-# Object files
 *.o
 *.ko
 *.obj
 *.elf
 
-# Precompiled Headers
 *.gch
 *.pch
 
-# Executables
 *.exe
 *.out
 *.app
@@ -16,7 +13,6 @@
 *.x86_64
 *.hex
 
-# Debug files
 *.dSYM/
 Pathfinder-Java/build/
 Pathfinder-Java/out/
@@ -28,10 +24,10 @@ test/build
 .gradle/
 out/
 .idea
+build/
 
 .vscode/
 
-#LabVIEW files
 *.lvlps
 
 *.aliases

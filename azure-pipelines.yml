@@ -1,0 +1,44 @@
+resources:
+  containers:
+  - container: linux
+    image: jaci/azure-native-linux:2018.11.14
+    options: --cap-add SYS_PTRACE
+# ^ Need SYS_PTRACE for Clang ASAN
+
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'VS2017-Win2016'
+  variables:
+    PlatformName: "win"
+  steps:
+  - template: azure-init.yml
+  - template: azure-steps.yml
+    parameters:
+      env: { }
+
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.13'
+  variables:
+    PlatformName: "mac"
+  steps:
+  - template: azure-init.yml
+  - template: azure-steps.yml
+    parameters:
+      env: { }
+
+- job: Linux
+  pool: 
+    vmImage: 'Ubuntu-16.04'
+  container: linux
+  variables:
+    PlatformName: "linux"
+  steps:
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      tasks: 'installRoboRioToolchain installRaspbianToolchain'
+      options: '--scan --stacktrace'
+  - template: azure-steps.yml

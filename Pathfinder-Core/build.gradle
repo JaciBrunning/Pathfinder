@@ -1,11 +1,9 @@
 apply plugin: 'c'
+apply plugin: 'base'
 
 model {
     components {
         pathfinder(NativeLibrarySpec) {
-            targetPlatform 'roborio'
-            targetPlatform 'any64'
-            
             binaries.all {
                 cCompiler.args << '-fPIC'
             }
@@ -22,41 +20,26 @@ model {
                 }
             }
         }
-    }
-    
+    }   
 }
 
-task zipRoborioCppHeaders(type: Zip) {
+task zipHeaders(type: Zip) {
     from fileTree('include')
 
-    baseName = "Pathfinder-Core"
+    baseName = "Pathfinder"
     classifier = "headers"
-    destinationDir = new File(project.buildDir, "dist")
-}
-
-task zipRoborioCppBinaries(type: Zip) {
-    dependsOn 'build'
-
-    from fileTree('build/libs/pathfinder/static/roborio')
-
-    baseName = "Pathfinder-Core"
-    classifier = "athena"
-    destinationDir = new File(project.buildDir, "dist")
 }
 
 publishing {
     publications {
         pathfinder(MavenPublication) {
-            groupId 'jaci.pathfinder'
-            artifactId 'Pathfinder-Core'
+            artifactId 'Pathfinder'
 
-            artifact zipRoborioCppBinaries {
-                classifier 'athena'
-            }
-
-            artifact zipRoborioCppHeaders {
+            artifact zipHeaders {
                 classifier 'headers'
             }
+
+            binaryArtifacts(it, 'pathfinder', false)
         }
     }
 }

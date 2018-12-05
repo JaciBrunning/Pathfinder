@@ -1,0 +1,97 @@
+import groovy.json.JsonOutput
+
+Map<String, Object> vendorJson() {
+  return [
+    fileName: "PathfinderOLD.json",
+    name: "PathfinderOld",
+    version: project.version,
+    uuid: "7194a2d4-2860-4bcc-86c0-97879737d875",
+    mavenUrls: [
+      "https://dev.imjac.in/maven"
+    ],
+    jsonUrl: "https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json",  // TODO:
+    cppDependencies: [
+      [
+        groupId: project.group,
+        artifactId: "Pathfinder",
+        version: project.version,
+        libName: "Pathfinder",
+        configuration: "native_pathfinder",
+        headerClassifier: "headers", 
+        sharedLibrary: true,
+        skipInvalidPlatforms: true,
+        binaryPlatforms: [
+          "linuxx86-64",
+          "windowsx86-64",
+          "osxx86-64",
+          "linuxathena",
+          "linuxraspbian"
+        ]
+      ]
+    ],
+    javaDependencies: [
+      [
+        groupId: project.group,
+        artifactId: "Pathfinder-Java",
+        version: project.version
+      ]
+    ],
+    jniDependencies: [
+      [
+        groupId: project.group,
+        artifactId: "Pathfinder-JNI",
+        version: project.version,
+        isJar: true,
+        skipInvalidPlatforms: true,
+        validPlatforms: [
+          "linuxx86-64",
+          "windowsx86-64",
+          "osxx86-64",
+          "linuxathena",
+          "linuxraspbian"
+        ]
+      ]
+    ]
+  ]
+}
+
+String vendorJsonString() {
+  return JsonOutput.prettyPrint(JsonOutput.toJson(vendorJson()))
+}
+
+task generateVendorDepsJson() {
+  def outfile = new File(buildDir, "PathfinderOLD.json")
+  outputs.file(outfile)
+
+  doLast {
+    outfile.text = vendorJsonString()
+  }
+}
+
+publishing {
+  publications {
+    vendordeps(MavenPublication) {
+      artifactId 'Pathfinder-FRCDeps'
+      artifact(generateVendorDepsJson.outputs.files.files[0]) {
+        builtBy generateVendorDepsJson
+      }
+    }
+  }
+}
+
+afterEvaluate {
+  publishing.repositories.all {
+    def vendorTask = task "writeLatestVendorDepsTo${name}"() {
+      def outfile = new File(new File(url), "jaci/pathfinder/PathfinderOLD-latest.json")
+      outputs.file(outfile)
+
+      doLast {
+        outfile.text = vendorJsonString()
+      }
+    }
+
+    tasks.withType(PublishToMavenRepository).all {
+      dependsOn vendorTask
+    }
+  }
+}
