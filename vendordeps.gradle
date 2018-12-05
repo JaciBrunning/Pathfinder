@@ -13,10 +13,10 @@ Map<String, Object> vendorJson() {
     cppDependencies: [
       [
         groupId: project.group,
-        artifactId: "Pathfinder",
+        artifactId: "Pathfinder-Core",
         version: project.version,
         libName: "Pathfinder",
-        configuration: "native_pathfinder",
+        configuration: "native_pathfinder_old",
         headerClassifier: "headers", 
         sharedLibrary: true,
         skipInvalidPlatforms: true,

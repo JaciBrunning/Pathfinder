@@ -33,7 +33,7 @@ task zipHeaders(type: Zip) {
 publishing {
     publications {
         pathfinder(MavenPublication) {
-            artifactId 'Pathfinder'
+            artifactId 'Pathfinder-Core'
 
             artifact zipHeaders {
                 classifier 'headers'
