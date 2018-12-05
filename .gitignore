@@ -35,3 +35,8 @@ build/
 *.iml
 *.ipr
 *.iws
+
+*.project
+*.settings
+*.classpath
+bin/
