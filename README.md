@@ -23,6 +23,14 @@ Tank Drive:
 Swerve Drive:  
 ![](img/swerve.png)
 
+## A note on calculation
+Pathfinder requires some knowledge about your robot. The most important measurement is the maximum velocity, which can be either calculated or measured
+emperically. 
+
+Measuring the velocity is the best option, and can be done in multiple ways:
+- Drive at full speed in a straight line. After allowing the robot to reach max speed, measure the distance it covers within a certain amount of time.
+- Drive at full speed in a circle. Time how long it takes to do 10 rotations, and use the formula for circumference `C = 2*pi*r` with `r = track radius` to calculate the distance travelled in total, dividing by `10 * time` to get max velocity.
+
 ## Part of the FIRST Robotics Competition?
 
 ### For 2019:
