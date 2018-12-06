@@ -9,7 +9,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'jaci.pathfinder'
-    version = '2019.1.9'
+    version = '2019.1.10'
 
     publishing {
         repositories {
@@ -26,6 +26,26 @@ allprojects {
 
 subprojects {
     plugins.withType(CPlugin).whenPluginAdded {
+        project.apply plugin: 'visual-studio'
+        project.apply plugin: 'edu.wpi.first.Toolchain'
+
+        toolchainsPlugin.withRaspbian()
+        toolchainsPlugin.withRoboRIO()
+
+        toolchainsPlugin.getByName('roboRio').optional = true
+
+        project.model {
+            components {
+                withType(TargetedNativeComponent) {
+                    targetPlatform NativePlatforms.desktop
+                    targetPlatform NativePlatforms.raspbian
+                    targetPlatform NativePlatforms.roborio
+                }
+            }
+        }
+    }
+
+    plugins.withType(CppPlugin).whenPluginAdded {
         project.apply plugin: 'visual-studio'
         project.apply plugin: 'edu.wpi.first.Toolchain'
 

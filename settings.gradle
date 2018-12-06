@@ -1,3 +1,10 @@
-include 'Pathfinder-Core', 'Pathfinder-Java'
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
+include 'Pathfinder-Core', 'Pathfinder-Java', 'Pathfinder-FRCSupport'
 
 rootProject.name = "Pathfinder"

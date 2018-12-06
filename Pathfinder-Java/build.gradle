@@ -58,6 +58,7 @@ publishing {
         }
         pathfinderJni(MavenPublication) {
             artifactId 'Pathfinder-JNI'
+
             binaryArtifacts(it, 'pathfinderjni', true)
         }
     }

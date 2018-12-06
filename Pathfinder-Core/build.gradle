@@ -41,5 +41,10 @@ publishing {
 
             binaryArtifacts(it, 'pathfinder', false)
         }
+
+        pathfindercorejni(MavenPublication) {
+            artifactId 'Pathfinder-CoreJNI'
+            binaryArtifacts(it, 'pathfinder', true)
+        }
     }
 }

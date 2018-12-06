@@ -15,7 +15,7 @@ Map<String, Object> vendorJson() {
         groupId: project.group,
         artifactId: "Pathfinder-Core",
         version: project.version,
-        libName: "Pathfinder",
+        libName: "pathfinder",
         configuration: "native_pathfinder_old",
         headerClassifier: "headers", 
         sharedLibrary: true,
@@ -27,6 +27,15 @@ Map<String, Object> vendorJson() {
           "linuxathena",
           "linuxraspbian"
         ]
+      ],
+      [
+        groupId: project.group,
+        artifactId: "Pathfinder-FRCSupport",
+        version: project.version,
+        libName: "pathfinder_frc",
+        configuration: "native_pathfinder_old",
+        headerClassifier: "headers",
+        binaryPlatforms: []
       ]
     ],
     javaDependencies: [
@@ -39,12 +48,31 @@ Map<String, Object> vendorJson() {
         groupId: "jaci.jniloader",
         artifactId: "JNILoader",
         version: "1.0.0"
+      ],
+      [
+        groupId: project.group,
+        artifactId: "FRCSupport",
+        version: project.version
       ]
     ],
     jniDependencies: [
       [
         groupId: project.group,
         artifactId: "Pathfinder-JNI",
+        version: project.version,
+        isJar: true,
+        skipInvalidPlatforms: true,
+        validPlatforms: [
+          "linuxx86-64",
+          "windowsx86-64",
+          "osxx86-64",
+          "linuxathena",
+          "linuxraspbian"
+        ]
+      ],
+      [
+        groupId: project.group,
+        artifactId: "Pathfinder-CoreJNI",
         version: project.version,
         isJar: true,
         skipInvalidPlatforms: true,

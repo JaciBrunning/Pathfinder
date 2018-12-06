@@ -12,6 +12,7 @@ public class PathfinderJNI {
     static {
         if (!libLoaded) {
             try {
+                new JNILoader("pathfinder").load();
                 new JNILoader("pathfinderjni").load();
                 // System.loadLibrary("pathfinderjni");
             } catch (Exception e) {
