@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pathfinder.h"
 #include "frc/Filesystem.h"
 
