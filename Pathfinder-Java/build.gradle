@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compile 'jaci.jniloader:JNILoader:1.0.0'
+    compile 'jaci.jniloader:JNILoader:1.0.1'
 }
 
 model {

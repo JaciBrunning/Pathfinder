@@ -34,12 +34,27 @@ subprojects {
 
         toolchainsPlugin.getByName('roboRio').optional = true
 
+        ext.is64 = NativePlatforms.desktopArch() == "x86-64"
+        ext.desktop32Classifier = NativePlatforms.desktopOS() + "x86"
+
         project.model {
+            platforms {
+                // If we're on x86 64-bit, also compile for x86 32-bit
+                if (is64) {
+                    "${desktop32Classifier}" {
+                        architecture 'x86'
+                    }
+                }
+            }
+
             components {
                 withType(TargetedNativeComponent) {
                     targetPlatform NativePlatforms.desktop
                     targetPlatform NativePlatforms.raspbian
                     targetPlatform NativePlatforms.roborio
+
+                    if (is64)
+                        targetPlatform ext.desktop32Classifier
                 }
             }
         }
@@ -67,7 +82,9 @@ subprojects {
 
     ext.binaryPublishers = [:]
     ext.binaryArtifacts = { scope, name, jar ->
-        binaryPublishers[name] = [scope: scope, jar: jar]
+        if (binaryPublishers[name] == null)
+            binaryPublishers[name] = []
+        binaryPublishers[name] << [scope: scope, jar: jar]
     }
 
     project.model {
@@ -99,9 +116,10 @@ subprojects {
                     }
 
                     if (binaryPublishers[bin.component.name] != null) {
-                        def entry = binaryPublishers[bin.component.name]
-                        entry.scope.artifact(entry.jar ? jartask : ziptask) {
-                            classifier targetPlatform.name
+                        binaryPublishers[bin.component.name].each { entry ->
+                            entry.scope.artifact(entry.jar ? jartask : ziptask) {
+                                classifier targetPlatform.name
+                            }
                         }
                     }
                 }
