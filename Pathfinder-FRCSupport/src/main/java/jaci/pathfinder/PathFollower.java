@@ -22,10 +22,12 @@ public class PathFollower {
         rightTrajectory = PathfinderFRC.getTrajectory(csvPath+".right");
         this.config = config;
         this.driveBase = driveBase;
+        leftFollower = new EncoderFollower();
         leftFollower.configureEncoder(0, config.encoderCPR, config.wheelDiameter);
         leftFollower.configurePIDVA(config.kP, config.kI, config.kD, config.kV, config.kA);
         leftFollower.setTrajectory(leftTrajectory);
 
+        rightFollower = new EncoderFollower();
         rightFollower.configureEncoder(0, config.encoderCPR, config.wheelDiameter);
         rightFollower.configurePIDVA(config.kP, config.kI, config.kD, config.kV, config.kA);
         rightFollower.setTrajectory(rightTrajectory);
@@ -46,6 +48,13 @@ public class PathFollower {
 
     public boolean isFinished() {
         return leftFollower.isFinished() || rightFollower.isFinished();
+    }
+
+    public void reset() {
+        leftFollower.reset();
+        rightFollower.reset();
+        leftFollower.configureEncoder(driveBase.getLeftEncoderTicks(),config.encoderCPR,config.wheelDiameter);
+        rightFollower.configureEncoder(driveBase.getRightEncoderTicks(),config.encoderCPR,config.wheelDiameter);
     }
 
 }

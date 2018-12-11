@@ -15,6 +15,11 @@ public class PathFollowerCommand extends Command {
     }
 
     @Override
+    protected void initialize() {
+        pf.reset();
+    }
+
+    @Override
     public void execute() {
         pf.run();
     }
