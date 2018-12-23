@@ -1,6 +1,8 @@
 package jaci.pathfinder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
 
 /**
  * The main class of the Pathfinder Library. The Pathfinder Library is used for Motion Profile and Trajectory Generation.
@@ -58,6 +60,7 @@ public class Pathfinder {
      * @param trajectory    The trajectory to write
      */
     public static void writeToFile(File file, Trajectory trajectory) {
+        if(!file.canWrite()) throw new RuntimeException(new AccessDeniedException(file.getAbsolutePath()));
         PathfinderJNI.trajectorySerialize(trajectory.segments, file.getAbsolutePath());
     }
 
@@ -67,6 +70,8 @@ public class Pathfinder {
      * @return              The trajectory that was read from file
      */
     public static Trajectory readFromFile(File file) {
+        if(!file.exists()) throw new RuntimeException(new FileNotFoundException("Path file not found at \"" + file.getAbsolutePath() + "\""));
+        if(!file.canRead()) throw new RuntimeException(new AccessDeniedException(file.getAbsolutePath()));
         return new Trajectory(PathfinderJNI.trajectoryDeserialize(file.getAbsolutePath()));
     }
 
@@ -76,6 +81,7 @@ public class Pathfinder {
      * @param trajectory    The trajectory to write
      */
     public static void writeToCSV(File file, Trajectory trajectory) {
+        if(!file.canWrite()) throw new RuntimeException(new AccessDeniedException(file.getAbsolutePath()));
         PathfinderJNI.trajectorySerializeCSV(trajectory.segments, file.getAbsolutePath());
     }
 
@@ -85,6 +91,8 @@ public class Pathfinder {
      * @return              The trajectory that was read from file
      */
     public static Trajectory readFromCSV(File file) {
+        if(!file.exists()) throw new RuntimeException(new FileNotFoundException("Path CSV not found at \"" + file.getAbsolutePath() + "\""));
+        if(!file.canRead()) throw new RuntimeException(new AccessDeniedException(file.getAbsolutePath()));
         return new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(file.getAbsolutePath()));
     }
 
