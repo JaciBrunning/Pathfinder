@@ -1,3 +1,5 @@
+package jaci.pathfinder;
+
 import java.io.File;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Pathfinder;
@@ -23,7 +25,7 @@ public class PathfinderFRC {
    * Get the absolute path of a trajectory file generated with the given name, usually by PathWeaver.
    * This looks in the deploy directory, e.g. for name "testtraj", "/home/lvuser/deploy/paths/testtraj.pf1.csv"
    * is the result (placed in "src/main/deploy/paths/testtraj.pf1.csv" in your project directory).
-   * 
+   *
    * @param name The name of the path
    * @return The absolute file of the trajectory
    */
@@ -34,7 +36,7 @@ public class PathfinderFRC {
   /**
    * Load a Trajectory from file, at the path described by {@link #getTrajectoryFile(String)}
    * This call is expensive, and as such the result should be stored.
-   * 
+   *
    * @param name The name of the path
    * @return The Trajectory loaded from file.
    */
@@ -42,4 +44,25 @@ public class PathfinderFRC {
     return Pathfinder.readFromCSV(getTrajectoryFile(name));
   }
 
+  /**
+   * Load a left Trajectory from file, at the path described by {@link #getTrajectoryFile(String)}
+   * This call is expensive, and as such the result should be stored.
+   *
+   * @param name The name of the path
+   * @return The Trajectory loaded from file.
+   */
+  public static Trajectory getLeftTrajectory(String name) {
+    return Pathfinder.readFromCSV(getTrajectoryFile(name + ".left"));
+  }
+
+  /**
+   * Load a right Trajectory from file, at the path described by {@link #getTrajectoryFile(String)}
+   * This call is expensive, and as such the result should be stored.
+   *
+   * @param name The name of the path
+   * @return The Trajectory loaded from file.
+   */
+  public static Trajectory getRightTrajectory(String name) {
+    return Pathfinder.readFromCSV(getTrajectoryFile(name + ".right"));
+  }
 }
