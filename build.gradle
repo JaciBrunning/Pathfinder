@@ -38,6 +38,11 @@ subprojects {
         ext.desktop32Classifier = NativePlatforms.desktopOS() + "x86"
 
         project.model {
+            buildTypes {
+                release
+                debug
+            }
+
             platforms {
                 // If we're on x86 64-bit, also compile for x86 32-bit
                 if (is64) {
@@ -92,7 +97,7 @@ subprojects {
             withType(NativeBinarySpec) {
                 def bin = it
                 if (it.buildable && !(it instanceof StaticLibraryBinary)) {
-                    def taskSuffix = "${component.name}${targetPlatform.name}"
+                    def taskSuffix = "${component.name}${targetPlatform.name}${buildType.name}"
                     def source = (bin instanceof SharedLibraryBinary ? bin.sharedLibraryFile : bin.executable.file)
 
                     def ziptask = task "zip${taskSuffix}"(type: Zip) {
@@ -118,7 +123,7 @@ subprojects {
                     if (binaryPublishers[bin.component.name] != null) {
                         binaryPublishers[bin.component.name].each { entry ->
                             entry.scope.artifact(entry.jar ? jartask : ziptask) {
-                                classifier targetPlatform.name
+                                classifier targetPlatform.name + (buildType.name == 'debug' ? 'debug' : '')
                             }
                         }
                     }

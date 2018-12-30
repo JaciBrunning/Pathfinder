@@ -9,7 +9,7 @@ Map<String, Object> vendorJson() {
     mavenUrls: [
       "https://dev.imjac.in/maven"
     ],
-    jsonUrl: "https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json",  // TODO:
+    jsonUrl: "https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json",
     cppDependencies: [
       [
         groupId: project.group,
@@ -51,7 +51,7 @@ Map<String, Object> vendorJson() {
       ],
       [
         groupId: project.group,
-        artifactId: "FRCSupport",
+        artifactId: "Pathfinder-FRCSupport",
         version: project.version
       ]
     ],
