@@ -1,3 +1,5 @@
+package jaci.pathfinder;
+
 import java.io.File;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Pathfinder;
