@@ -9,7 +9,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'jaci.pathfinder'
-    version = '2019.1.11'
+    version = '2019.1.12'
 
     publishing {
         repositories {
@@ -97,11 +97,16 @@ subprojects {
             withType(NativeBinarySpec) {
                 def bin = it
                 if (it.buildable && !(it instanceof StaticLibraryBinary)) {
+                    def shared = bin instanceof SharedLibraryBinary
                     def taskSuffix = "${component.name}${targetPlatform.name}${buildType.name}"
-                    def source = (bin instanceof SharedLibraryBinary ? bin.sharedLibraryFile : bin.executable.file)
+                    def source = (shared ? bin.sharedLibraryFile : bin.executable.file)
 
                     def ziptask = task "zip${taskSuffix}"(type: Zip) {
-                        from(source)
+                        def allsrc = [source]
+                        if (shared && bin.targetPlatform.operatingSystem.isWindows()) {
+                            allsrc << bin.sharedLibraryLinkFile
+                        }
+                        from(allsrc as Set<File>)
                         into(targetPlatform.name)
 
                         baseName = component.name
