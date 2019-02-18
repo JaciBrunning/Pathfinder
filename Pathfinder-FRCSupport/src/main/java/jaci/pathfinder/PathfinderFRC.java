@@ -1,6 +1,8 @@
 package jaci.pathfinder;
 
 import java.io.File;
+import java.io.IOException;
+
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Pathfinder;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -40,7 +42,7 @@ public class PathfinderFRC {
    * @param name The name of the path
    * @return The Trajectory loaded from file.
    */
-  public static Trajectory getTrajectory(String name) {
+  public static Trajectory getTrajectory(String name) throws IOException {
     return Pathfinder.readFromCSV(getTrajectoryFile(name));
   }
 
