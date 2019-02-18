@@ -1,6 +1,7 @@
 package jaci.pathfinder;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * The main class of the Pathfinder Library. The Pathfinder Library is used for Motion Profile and Trajectory Generation.
@@ -58,6 +59,7 @@ public class Pathfinder {
      * @param trajectory    The trajectory to write
      */
     public static void writeToFile(File file, Trajectory trajectory) {
+        file.getParentFile().mkdirs();
         PathfinderJNI.trajectorySerialize(trajectory.segments, file.getAbsolutePath());
     }
 
@@ -66,7 +68,9 @@ public class Pathfinder {
      * @param file          The file to read from
      * @return              The trajectory that was read from file
      */
-    public static Trajectory readFromFile(File file) {
+    public static Trajectory readFromFile(File file) throws IOException {
+        if (!file.exists())
+            throw new IOException("File " + file.getAbsolutePath() + " does not exist!");
         return new Trajectory(PathfinderJNI.trajectoryDeserialize(file.getAbsolutePath()));
     }
 
@@ -76,15 +80,19 @@ public class Pathfinder {
      * @param trajectory    The trajectory to write
      */
     public static void writeToCSV(File file, Trajectory trajectory) {
+        file.getParentFile().mkdirs();
         PathfinderJNI.trajectorySerializeCSV(trajectory.segments, file.getAbsolutePath());
     }
 
     /**
      * Read a Trajectory from a CSV File
-     * @param file          The file to read from
-     * @return              The trajectory that was read from file
+     * 
+     * @param file The file to read from
+     * @return The trajectory that was read from file
      */
-    public static Trajectory readFromCSV(File file) {
+    public static Trajectory readFromCSV(File file) throws IOException {
+        if (!file.exists())
+            throw new IOException("File " + file.getAbsolutePath() + " does not exist!");
         return new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(file.getAbsolutePath()));
     }
 

@@ -20,6 +20,8 @@ extern "C" {
 
 #include "pathfinder/io.h"
 
+#include "pathfinder/error.h"
+
 #ifdef __cplusplus
 }
 #endif

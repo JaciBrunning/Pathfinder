@@ -9,7 +9,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'jaci.pathfinder'
-    version = '2019.1.12'
+    version = '2019.2.19'
 
     publishing {
         repositories {
