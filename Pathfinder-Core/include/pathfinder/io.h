@@ -17,10 +17,10 @@ CAPI unsigned long long doubleToLong(double d);
 CAPI void doubleToBytes(double n, char *bytes);
 CAPI double bytesToDouble(char *bytes);
 
-CAPI void pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length);
+CAPI int pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length);
 CAPI int pathfinder_deserialize(FILE *fp, Segment *target);
 
-CAPI void pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_length);
+CAPI int pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_length);
 CAPI int pathfinder_deserialize_csv(FILE *fp, Segment *target);
 
 #endif

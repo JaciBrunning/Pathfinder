@@ -65,7 +65,11 @@ double bytesToDouble(char *bytes) {
 
 // FUNCTIONS //
 
-void pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length) {
+int pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length) {
+    if (fp == NULL) {
+        pathfinder_set_error("File does not exist!");
+        return -1;
+    }
     char buf_1[4];
     intToBytes(trajectory_length, buf_1);
     fwrite(buf_1, 1, 4, fp);
@@ -99,9 +103,15 @@ void pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length) 
         doubleToBytes(s.heading, buf);
         fwrite(buf, 1, 8, fp);
     }
+    return 0;
 }
 
 int pathfinder_deserialize(FILE *fp, Segment *target) {
+    if (fp == NULL) {
+        pathfinder_set_error("File does not exist!");
+        return -1;
+    }
+
     char buf_1[4];
     fread(buf_1, 1, 4, fp);
     int length = bytesToInt(buf_1);
@@ -140,7 +150,12 @@ int pathfinder_deserialize(FILE *fp, Segment *target) {
     return length;
 }
 
-void pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_length) {
+int pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_length) {
+    if (fp == NULL) {
+        pathfinder_set_error("File does not exist!");
+        return -1;
+    }
+
     fputs(CSV_LEADING_STRING, fp);
     
     int i;
@@ -150,9 +165,15 @@ void pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_leng
         sprintf(buf, "%f,%f,%f,%f,%f,%f,%f,%f\n", s.dt, s.x, s.y, s.position, s.velocity, s.acceleration, s.jerk, s.heading);
         fputs(buf, fp);
     }
+    return 0;
 }
 
 int pathfinder_deserialize_csv(FILE *fp, Segment *target) {
+    if (fp == NULL) {
+        pathfinder_set_error("File does not exist!");
+        return -1;
+    }
+    
     char line[1024];
     int line_n = 0;
     int seg_n = 0;

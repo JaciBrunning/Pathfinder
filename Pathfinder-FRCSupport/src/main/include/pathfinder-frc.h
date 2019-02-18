@@ -7,6 +7,7 @@
 #include <wpi/Path.h>
 
 #include <cstdio>
+#include <stdexcept>
 
 /**
  * Utility class for using Pathfinder v1 with WPILib for FRC.
@@ -37,6 +38,9 @@ class PathfinderFRC {
     wpi::SmallString<256> path;
     frc::filesystem::GetDeployDirectory(path);
     wpi::sys::path::append(path, "paths", name + ".pf1.csv");
+    if (!wpi::sys::fs::exists(path)) {
+      throw std::runtime_error("Path " + std::string(path.c_str()) + " does not exist!");
+    }
     return std::string(path.c_str());
   }
 
