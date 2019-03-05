@@ -6,4 +6,7 @@
 char * pathfinder_error();
 void pathfinder_set_error(const char *msg);
 
+void pathfinder_clear_errors();
+int pathfinder_has_error();
+
 #endif

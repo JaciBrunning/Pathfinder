@@ -10,6 +10,16 @@ int pathfinder_prepare(const Waypoint *path, int path_length, void (*fit)(Waypoi
     
     cand->saptr = (Spline *)malloc((path_length - 1) * sizeof(Spline));
     cand->laptr = (double *)malloc((path_length - 1) * sizeof(double));
+
+    if (cand->saptr == NULL) {
+        pathfinder_set_error("Prepare: could not allocate splines array");
+        return -1;
+    }
+
+    if (cand->laptr == NULL) {
+        pathfinder_set_error("Prepare: could not allocate lengths array");
+        return -1;
+    }
     double totalLength = 0;
     
     int i;

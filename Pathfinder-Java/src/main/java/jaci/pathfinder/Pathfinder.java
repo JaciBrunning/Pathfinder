@@ -105,4 +105,10 @@ public class Pathfinder {
         }
     }
 
+    public static class PathfinderJNIException extends Exception {
+        public PathfinderJNIException(String message) {
+            super(message);
+        }
+    }
+
 }

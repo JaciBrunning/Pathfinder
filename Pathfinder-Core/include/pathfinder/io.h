@@ -23,4 +23,7 @@ CAPI int pathfinder_deserialize(FILE *fp, Segment *target);
 CAPI int pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_length);
 CAPI int pathfinder_deserialize_csv(FILE *fp, Segment *target);
 
+// Note: does not trim header.
+CAPI int pathfinder_get_file_length(FILE *fp);
+
 #endif

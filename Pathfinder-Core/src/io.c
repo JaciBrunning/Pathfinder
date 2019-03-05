@@ -70,6 +70,12 @@ int pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length) {
         pathfinder_set_error("File does not exist!");
         return -1;
     }
+
+    if (trajectory == NULL) {
+        pathfinder_set_error("Can't serialize to a null buffer");
+        return -1;
+    }
+
     char buf_1[4];
     intToBytes(trajectory_length, buf_1);
     fwrite(buf_1, 1, 4, fp);
@@ -109,6 +115,11 @@ int pathfinder_serialize(FILE *fp, Segment *trajectory, int trajectory_length) {
 int pathfinder_deserialize(FILE *fp, Segment *target) {
     if (fp == NULL) {
         pathfinder_set_error("File does not exist!");
+        return -1;
+    }
+
+    if (target == NULL) {
+        pathfinder_set_error("Can't deserialize to a null buffer");
         return -1;
     }
 
@@ -156,6 +167,11 @@ int pathfinder_serialize_csv(FILE *fp, Segment *trajectory, int trajectory_lengt
         return -1;
     }
 
+    if (trajectory == NULL) {
+        pathfinder_set_error("Can't serialize to a null buffer");
+        return -1;
+    }
+
     fputs(CSV_LEADING_STRING, fp);
     
     int i;
@@ -173,12 +189,21 @@ int pathfinder_deserialize_csv(FILE *fp, Segment *target) {
         pathfinder_set_error("File does not exist!");
         return -1;
     }
+
+    if (target == NULL) {
+        pathfinder_set_error("Can't deserialize to a null buffer");
+        return -1;
+    }
     
     char line[1024];
     int line_n = 0;
     int seg_n = 0;
     while (fgets(line, 1024, fp)) {
         char *tmp = strdup(line);
+        if (tmp == NULL) {
+            pathfinder_set_error("strdup returned null. Have you run out of RAM, Heap Space, or have been hit by a cosmic ray?");
+            return -1;
+        }
         if (line_n == 0) { } // Do nothing, first line specifies the headers
         
         char *record;
@@ -208,4 +233,27 @@ int pathfinder_deserialize_csv(FILE *fp, Segment *target) {
         line_n++;
     }
     return seg_n;
+}
+
+int pathfinder_get_file_length(FILE *fp) {
+    if (fp == NULL) {
+        pathfinder_set_error("File does not exist!");
+        return -1;
+    }
+
+    char line[1024];
+    int line_n = 0;
+    while (fgets(line, 1024, fp)) {
+        line_n++;
+        if (strlen(line) >= 1024 - 1) {
+            char buf[1024];
+            sprintf(buf, "WARNING: Line %d is > 1024 characters long. If read, errors may occur.", line_n);
+            pathfinder_set_error(buf);
+            return -1;
+        }
+    }
+
+    rewind(fp);
+
+    return line_n;
 }
