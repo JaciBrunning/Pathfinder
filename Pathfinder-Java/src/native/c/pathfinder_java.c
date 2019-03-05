@@ -429,12 +429,8 @@ JNIEXPORT jobjectArray JNICALL Java_jaci_pathfinder_PathfinderJNI_trajectoryDese
         return throwPathfinderException(env);
     }
 
-    int num_lines = pathfinder_get_file_length(fp);
-    if (num_lines < 0) {
-        return throwPathfinderException(env);
-    }
-
-    Segment *segs = malloc(num_lines * sizeof(Segment));
+    // We don't know the amount of segments, so we have to overallocate. TODO: fix this.
+    Segment *segs = malloc(4096 * sizeof(Segment));
     if (segs == NULL) {
         pathfinder_set_error("JNI: Could not malloc segments");
         return throwPathfinderException(env);
