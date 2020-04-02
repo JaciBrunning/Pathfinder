@@ -4,6 +4,7 @@ Cross-Platform, Multi-Use Motion Profiling and Trajectory Generation.
 
 Pathfinder is a library for generating Motion Profiles, a way to smoothly fit and follow a trajectory based upon 
 given waypoints. Currently, both a C and Java API are available, but can be applied to almost any application.
+There also exists a C++ port which can be used by copying the files into your C++ project.
 
 An example profile is given below, with the waypoints:  
 1) X = -4, Y = -1, Angle = -45 degrees  
