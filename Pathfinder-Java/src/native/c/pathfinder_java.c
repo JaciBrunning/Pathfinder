@@ -50,9 +50,9 @@ fitmethod getFitMethod(JNIEnv *env, jobject obj) {
     
     fitmethod method;
     
-    if (strcmp(nativeString, "FIT_HERMITE_CUBIC") == 0) {
+    if (strcmp(nativeString, "HERMITE_CUBIC") == 0) {
         method = FIT_HERMITE_CUBIC;
-    } else if (strcmp(nativeString, "FIT_HERMITE_QUINTIC") == 0) {
+    } else if (strcmp(nativeString, "HERMITE_QUINTIC") == 0) {
         method = FIT_HERMITE_QUINTIC;
     } else {
         method = FIT_HERMITE_CUBIC;
